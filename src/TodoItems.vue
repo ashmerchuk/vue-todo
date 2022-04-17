@@ -15,10 +15,11 @@
                 <div v-else>
                     <h3>You have {{notes.length}} notes </h3>
                 </div>
-                <li v-for="(myNote, index) in notes" :key="myNote">{{Uppercase(myNote)}}
+                <li v-for="(myNote, index) in notes" :key="myNote">
+                    <span :class="important === true ? 'imp' : ''">{{Uppercase(myNote)}}</span>
                     <button class="btn danger" @click="deleteEvent(index)">Delete</button>
-                    <button class="btn important" @click="deleteEvent(index)">Important</button>
-                    <button class="btn done" @click="deleteEvent(index)">Done</button>
+                    <button class="btn important" @click="importantEvent(index)">Important</button>
+                    <button class="btn done" @click="doneEvent(index)">Done</button>
                 </li>
             </ul>
             <h3 v-else>You don't have what to do</h3>
@@ -33,13 +34,20 @@ export default {
              placeholderString: 'Type some todo...',
              title: 'Todo list',
              inputValue: '',
-             notes: []
+             notes: [],
+             limit: 50,
+             important: false, 
          }
     },
     methods: {
         addTodo(){
-            if(this.inputValue !== ''){
-            this.notes.push(this.inputValue)
+            if(this.inputValue.length <= this.limit){
+              if(this.inputValue !== ''){
+                this.notes.push(this.inputValue)
+              }
+            }
+            else{
+              alert(`Please maximal ${this.limit} letters`)
             }
             this.inputValue = ''
         },
@@ -48,6 +56,10 @@ export default {
         },
         deleteEvent(index){
            this.notes.splice(index, 1)
+        },
+        importantEvent(index){
+          this.notes[index]
+          this.important = true
         }
     },
 }
@@ -55,6 +67,9 @@ export default {
 <style>
 body{
     background-color: #2d3c4f;
+}
+.imp{
+  color:#c52323
 }
 .events{
   margin: 2em 35%;
@@ -128,7 +143,7 @@ h3{
     opacity: 0.8;
   }
   .container{
-    max-width: 1000px;
+    max-width: 80%;
     background-color: white;
     margin: 3% 15%;
     border-radius: 20px;
